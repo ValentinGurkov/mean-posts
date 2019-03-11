@@ -1,7 +1,19 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
+const Post = require('./models/post')
 
 const app = express()
+
+mongoose.connect('mongodb+srv://vg:vqyZivBSjeG1gXQ6@nbu0-oe2li.mongodb.net/mean-posts?retryWrites=true', { useNewUrlParser: true })
+  .then(() => {
+    console.log('Connected to database.')
+  })
+  .catch(error => {
+    console.error('Error connecting to database: ' + error)
+    process.exit(1)
+  })
 
 app.use(bodyParser.json())
 
@@ -13,31 +25,42 @@ app.use((req, res, next) => {
 })
 
 app.post('/api/posts', (req, res) => {
-  const post = req.body
-  console.log(post)
-  res.status(201).json({
-    message: 'OK'
-  })
+  const post = new Post(req.body)
+  post.save()
+    .then( savedPost => {
+      res.status(201).json({
+        message: 'OK',
+        id: savedPost._id
+      })
+    })
 })
 
 
 app.get('/api/posts', (req, res) => {
-  const posts = [
-    {
-      id: '12312312',
-      title: 'first post',
-      content: 'first content'
-    },
-    {
-      id: '123122213312',
-      title: 'sec post',
-      content: 'sec content'
-    }
-  ]
-  res.status(200).json({
-    message: 'OK',
-    posts
-  })
+  Post.find()
+    .then(documents => {
+      let posts = []
+      documents.map(post => posts.push({
+        id: post._id,
+        title: post.title,
+        content: post.content
+      }))
+      res.status(200).json({
+        message: 'OK',
+        posts
+      })
+    })
+})
+
+app.delete('/api/posts/:id', (req, res) => {
+  Post.deleteOne({ _id: req.params.id})
+    .then( () => {
+      res.status(200).json({ message: 'Deleted. '})
+    })
+    .catch(error => {
+      console.error('Error deleting post in database: ' + error)
+    })
+
 })
 
 module.exports = app
