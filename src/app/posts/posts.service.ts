@@ -14,7 +14,12 @@ export class PostService {
     this.http.get<{message: string, posts: Post[]}>('http://localhost:3000/api/posts').subscribe(res => {
       this.posts = res.posts;
       this.postsUpdated.next([...this.posts]);
+      console.log(this.posts);
     });
+  }
+
+  getPost(id: string) {
+    return {...this.posts.find(post => post.id === id)};
   }
 
   getPostUpdateListener() {
@@ -28,6 +33,13 @@ export class PostService {
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
     });
+  }
+
+  updatePost(id: string, title: string, content: string) {
+    this.http.patch('http://localhost:3000/api/posts/' + id, { id, title, content})
+      .subscribe(res => {
+        console.log(res);
+      });
   }
 
   deletePost(postID: string) {
