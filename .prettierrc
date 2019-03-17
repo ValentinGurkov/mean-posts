@@ -1,0 +1,16 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "printWidth": 140,
+  "overrides": [
+    {
+      "files": "server/**/*.js",
+      "options": {
+        "semi": false,
+        "printWidth": 140,
+        "singleQuote": true
+      }
+    }
+  ]
+}
