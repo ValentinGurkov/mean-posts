@@ -7,14 +7,15 @@ import { Post } from './post.model';
 @Injectable({ providedIn: 'root' })
 export class PostService {
   private posts: Post[] = [];
-  private postsUpdated: Subject<Post[]> = new Subject<Post[]>();
+  private postsUpdated = new Subject<{ posts: Post[], postCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getPosts() {
-    this.http.get<{ message: string; posts: Post[] }>('http://localhost:3000/api/posts').subscribe(res => {
+  getPosts(postsPerPage: number, currentPage: number) {
+    const query = `?size=${postsPerPage}&page=${currentPage}`;
+    this.http.get<{ message: string; maxPosts: number; posts: Post[] }>('http://localhost:3000/api/posts' + query).subscribe(res => {
       this.posts = res.posts;
-      this.postsUpdated.next([...this.posts]);
+      this.postsUpdated.next({ posts: [...this.posts], postCount: res.maxPosts });
     });
   }
 
@@ -33,10 +34,7 @@ export class PostService {
     postData.append('image', image, title);
     this.http
       .post<{ message: string; id: string; title: string; content: string; imagePath: string }>('http://localhost:3000/api/posts', postData)
-      .subscribe(res => {
-        const post: Post = { id: res.id, title, content, imagePath: res.imagePath };
-        this.posts.push(post);
-        this.postsUpdated.next([...this.posts]);
+      .subscribe(() => {
         this.router.navigate(['/']);
       });
   }
@@ -52,21 +50,12 @@ export class PostService {
     } else {
       postData = { id, title, content, imagePath: null };
     }
-    this.http.patch<{ message: string; imagePath: string }>('http://localhost:3000/api/posts/' + id, postData).subscribe(res => {
-      const updatedPosts = [...this.posts];
-      const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
-      const post: Post = { id, title, content, imagePath: res.imagePath };
-      updatedPosts[oldPostIndex] = post;
-      this.posts = updatedPosts;
-      this.postsUpdated.next();
+    this.http.patch<{ message: string; imagePath: string }>('http://localhost:3000/api/posts/' + id, postData).subscribe(() => {
       this.router.navigate(['/']);
     });
   }
 
   deletePost(postID: string) {
-    this.http.delete('http://localhost:3000/api/posts/' + postID).subscribe(() => {
-      this.posts = this.posts.filter(post => post.id !== postID);
-      this.postsUpdated.next([...this.posts]);
-    });
+    return this.http.delete('http://localhost:3000/api/posts/' + postID);
   }
 }

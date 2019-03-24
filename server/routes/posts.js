@@ -55,9 +55,19 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('', (req, res) => {
-  Post.find().then(documents => {
+  const pageSize = +req.query.size
+  const currentPage = +req.query.page
+  const postQuery =  Post.find()
+  let fetchedPosts
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize)
+  }
+  postQuery.then(documents => {
+    fetchedPosts = documents
+    return Post.countDocuments()
+  }).then(count => {
     let posts = []
-    documents.map(post =>
+    fetchedPosts.map(post =>
       posts.push({
         id: post._id,
         title: post.title,
@@ -67,6 +77,7 @@ router.get('', (req, res) => {
     )
     res.status(200).json({
       message: 'OK',
+      maxPosts: count,
       posts
     })
   })
