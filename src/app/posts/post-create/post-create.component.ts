@@ -23,7 +23,7 @@ export class PostCreateComponent implements OnInit {
   constructor(public postService: PostService, public route: ActivatedRoute) {}
 
   onSavePost() {
-    if (this.form.invalid) {
+    if (this.form.invalid || typeof this.form.value.image !== 'object') {
       return;
     }
     this.isLoading = true;
@@ -60,7 +60,7 @@ export class PostCreateComponent implements OnInit {
         this.isLoading = true;
         this.postService.getPost(this.postID).subscribe(post => {
           this.isLoading = false;
-          this.post = { id: post._id, title: post.title, content: post.content, imagePath: post.imagePath };
+          this.post = { id: post._id, title: post.title, content: post.content, imagePath: post.imagePath, author: post.author };
           this.form.setValue({ title: this.post.title, content: this.post.content, image: this.post.imagePath });
         });
       } else {

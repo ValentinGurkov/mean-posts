@@ -20,7 +20,8 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string; imagePath: string }>('http://localhost:3000/api/posts/' + id);
+    return this.http.get<{ _id: string; title: string; content: string; imagePath: string; author: string
+      }>('http://localhost:3000/api/posts/' + id);
   }
 
   getPostUpdateListener() {
@@ -48,7 +49,7 @@ export class PostService {
       postData.append('content', content);
       postData.append('image', image, title);
     } else {
-      postData = { id, title, content, imagePath: null };
+      postData = { id, title, content, imagePath: null, author: null };
     }
     this.http.patch<{ message: string; imagePath: string }>('http://localhost:3000/api/posts/' + id, postData).subscribe(() => {
       this.router.navigate(['/']);

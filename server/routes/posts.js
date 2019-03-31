@@ -32,7 +32,8 @@ router.post('', checkAuth, multer({ storage }).single('image'), (req, res) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
-    imagePath: url + '/images/' + req.file.filename
+    imagePath: url + '/images/' + req.file.filename,
+    author: req.userData.userID
   })
   post.save().then(savedPost => {
     res.status(201).json({
@@ -73,7 +74,8 @@ router.get('', (req, res) => {
         id: post._id,
         title: post.title,
         content: post.content,
-        imagePath: post.imagePath
+        imagePath: post.imagePath,
+        author: post.author
       })
     )
     res.status(200).json({
@@ -94,11 +96,16 @@ router.patch('/:id', checkAuth, multer({ storage }).single('image'), (req, res) 
     _id: req.params.id,
     title: req.body.title,
     content: req.body.content,
-    imagePath
+    imagePath,
+    author: req.userData.userID
   })
-  Post.updateOne({ _id: req.params.id }, post)
-    .then(() => {
-      res.status(200).json({ message: 'Post updated.', imagePath })
+  Post.updateOne({ _id: req.params.id, author: req.userData.userID }, post)
+    .then(result => {
+      if (result.nModified > 0) {
+        res.status(200).json({ message: 'Post updated', imagePath })
+      } else {
+        res.status(401).json({ message: 'Not Authorized' })
+      }
     })
     .catch(error => {
       console.error('Error updating post in database: ' + error)
@@ -106,9 +113,13 @@ router.patch('/:id', checkAuth, multer({ storage }).single('image'), (req, res) 
 })
 
 router.delete('/:id', checkAuth, (req, res) => {
-  Post.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({ message: 'Post deleted. ' })
+  Post.deleteOne({ _id: req.params.id, author: req.userData.userID })
+    .then(result => {
+      if (result.n > 0) {
+        res.status(200).json({ message: 'Post deleted' })
+      } else {
+        res.status(401).json({ message: 'Not Authorized' })
+      }
     })
     .catch(error => {
       console.error('Error deleting post in database: ' + error)

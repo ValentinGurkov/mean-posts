@@ -51,7 +51,8 @@ router.post('/login', (req, res) => {
       res.status(200).json({
         message: 'Authentication successful',
         token,
-        expiresIn: 3600
+        expiresIn: 3600,
+        userID: fetchedUser._id
       })
     })
     .catch(error => {
