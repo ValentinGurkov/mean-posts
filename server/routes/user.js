@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
     })
     .then(result => {
       if (!result) {
-        res.status(401).json({
+        return res.status(401).json({
           message: 'Failed authentication'
         })
       }
@@ -50,7 +50,8 @@ router.post('/login', (req, res) => {
       })
       res.status(200).json({
         message: 'Authentication successful',
-        token
+        token,
+        expiresIn: 3600
       })
     })
     .catch(error => {
