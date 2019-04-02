@@ -21,22 +21,22 @@ router.post('/signup', (req, res) => {
       })
       .catch(error => {
         res.status(500).json({
-          error
+          message: 'Invalid authentication credentials!'
         })
       })
   })
 })
 
 router.post('/login', (req, res) => {
-  let fetchedUser;
+  let fetchedUser
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
         return res.status(401).json({
-          message: 'Failed authentication'
+          message: 'Invalid authentication credentials!'
         })
       }
-      fetchedUser = user;
+      fetchedUser = user
       return bcrypt.compare(req.body.password, user.password)
     })
     .then(result => {
@@ -45,9 +45,13 @@ router.post('/login', (req, res) => {
           message: 'Failed authentication'
         })
       }
-      const token = jwt.sign({ email: fetchedUser.email, userID: fetchedUser._id }, 'some super c-sec long secret that should be super secure', {
-        expiresIn: '1h'
-      })
+      const token = jwt.sign(
+        { email: fetchedUser.email, userID: fetchedUser._id },
+        'some super c-sec long secret that should be super secure',
+        {
+          expiresIn: '1h'
+        }
+      )
       res.status(200).json({
         message: 'Authentication successful',
         token,

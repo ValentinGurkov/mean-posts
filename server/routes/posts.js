@@ -35,55 +35,75 @@ router.post('', checkAuth, multer({ storage }).single('image'), (req, res) => {
     imagePath: url + '/images/' + req.file.filename,
     author: req.userData.userID
   })
-  post.save().then(savedPost => {
-    res.status(201).json({
-      message: 'OK',
-      id: savedPost._id,
-      title: savedPost.title,
-      content: savedPost.content,
-      imagePath: savedPost
+  post
+    .save()
+    .then(savedPost => {
+      res.status(201).json({
+        message: 'OK',
+        id: savedPost._id,
+        title: savedPost.title,
+        content: savedPost.content,
+        imagePath: savedPost
+      })
     })
-  })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Creating a post failed!'
+      })
+    })
 })
 
 router.get('/:id', (req, res) => {
-  Post.findById(req.params.id).then(post => {
-    if (post) {
-      res.status(200).json(post)
-    } else {
-      res.status(404).json({ message: 'Post not found' })
-    }
-  })
+  Post.findById(req.params.id)
+    .then(post => {
+      if (post) {
+        res.status(200).json(post)
+      } else {
+        res.status(404).json({ message: 'Post not found' })
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Fetching post failed!'
+      })
+    })
 })
 
 router.get('', (req, res) => {
   const pageSize = +req.query.size
   const currentPage = +req.query.page
-  const postQuery =  Post.find()
+  const postQuery = Post.find()
   let fetchedPosts
   if (pageSize && currentPage) {
     postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize)
   }
-  postQuery.then(documents => {
-    fetchedPosts = documents
-    return Post.countDocuments()
-  }).then(count => {
-    let posts = []
-    fetchedPosts.map(post =>
-      posts.push({
-        id: post._id,
-        title: post.title,
-        content: post.content,
-        imagePath: post.imagePath,
-        author: post.author
-      })
-    )
-    res.status(200).json({
-      message: 'OK',
-      maxPosts: count,
-      posts
+  postQuery
+    .then(documents => {
+      fetchedPosts = documents
+      return Post.countDocuments()
     })
-  })
+    .then(count => {
+      let posts = []
+      fetchedPosts.map(post =>
+        posts.push({
+          id: post._id,
+          title: post.title,
+          content: post.content,
+          imagePath: post.imagePath,
+          author: post.author
+        })
+      )
+      res.status(200).json({
+        message: 'OK',
+        maxPosts: count,
+        posts
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Fetching posts failed!'
+      })
+    })
 })
 
 router.patch('/:id', checkAuth, multer({ storage }).single('image'), (req, res) => {
