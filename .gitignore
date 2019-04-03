@@ -46,3 +46,4 @@ Thumbs.db
 
 # Static files
 /server/images/*
+!/server/*/
