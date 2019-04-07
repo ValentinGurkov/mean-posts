@@ -43,7 +43,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# Static files
-/server/images/*
-!/server/*/

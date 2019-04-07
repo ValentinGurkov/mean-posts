@@ -42,13 +42,9 @@ exports.Login = (req, res) => {
           message: 'Failed authentication'
         })
       }
-      const token = jwt.sign(
-        { email: fetchedUser.email, userID: fetchedUser._id },
-        'some super c-sec long secret that should be super secure',
-        {
-          expiresIn: '1h'
-        }
-      )
+      const token = jwt.sign({ email: fetchedUser.email, userID: fetchedUser._id }, process.env.JWT_KEY, {
+        expiresIn: '1h'
+      })
       res.status(200).json({
         message: 'Authentication successful',
         token,

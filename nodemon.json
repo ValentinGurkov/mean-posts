@@ -1,0 +1,6 @@
+{
+  "env": {
+    "MONGO_ATLAS_PASSWORD": "vqyZivBSjeG1gXQ6",
+    "JWT_KEY": "some super c-sec long secret that should be super secure"
+  }
+}

@@ -9,7 +9,10 @@ const userRoutes = require('./routes/user.js')
 const app = express()
 
 mongoose
-  .connect('mongodb+srv://vg:vqyZivBSjeG1gXQ6@nbu0-oe2li.mongodb.net/mean-posts?retryWrites=true', { useNewUrlParser: true, useCreateIndex: true })
+  .connect('mongodb+srv://vg:' + process.env.MONGO_ATLAS_PASSWORD + '@nbu0-oe2li.mongodb.net/mean-posts?retryWrites=true', {
+    useNewUrlParser: true,
+    useCreateIndex: true
+  })
   .then(() => {
     console.log('Connected to database.')
   })
