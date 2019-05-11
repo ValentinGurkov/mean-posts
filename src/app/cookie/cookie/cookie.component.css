@@ -1,0 +1,42 @@
+.cookie-banner {
+  display: none;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  top: auto;
+  left: auto;
+  max-width: 380px;
+  right: 90px;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: .5em;
+}
+
+.cookie-button {
+  margin: .5em;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid #673ab7;
+  background: 0 0;
+  text-align: center;
+}
+
+.cookie-button button {
+    width: 100%;
+    font-size: 14px;
+    text-transform: uppercase;
+    padding: 14px 12px;
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+    color: #673ab7;
+}
+
+.cookie-text {
+  margin: .5em;
+  color: #673ab7;
+  font-size: 12px;
+  line-height: 1.6em;
+}
+

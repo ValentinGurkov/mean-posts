@@ -12,9 +12,10 @@ import { ErrorInterceptor } from './error-interceptor';
 import { ErrorComponent } from './error/error.component';
 import { AngularMaterialModule } from './angular-material.module';
 import { PostsModule } from './posts/posts.module';
+import { CookieComponent } from './cookie/cookie/cookie.component';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, ErrorComponent],
+  declarations: [AppComponent, HeaderComponent, ErrorComponent, CookieComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
