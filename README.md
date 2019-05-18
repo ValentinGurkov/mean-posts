@@ -1,5 +1,7 @@
 # mean-posts
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ValentinGurkov/mean-posts.svg)](https://greenkeeper.io/)
+
 MEAN project mainly for getting a grip on Angular and MongoDB
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.4.
