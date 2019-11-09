@@ -394,15 +394,17 @@
     semver "6.3.0"
     semver-intersect "1.4.0"
 
-"@types/jasmine@~3.4.6":
+"@types/jasmine@*", "@types/jasmine@~3.4.6":
   version "3.4.6"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.4.6.tgz#afcb210af0fa751b85a96b2034eedada65390be1"
   integrity sha512-hpQHs+lmZ0uuCrGyqypdI1Ho7jRFolOBT6OkNdZPFziLSSEKvWu+VxWU6bGdNEA/hoV4jV8pdDeNx8EWlmfNAw==
 
-"@types/jasminewd2@~2.0.7":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@types/jasminewd2/-/jasminewd2-2.0.7.tgz#71756ac7780add2dcd32384919ac903ad550f643"
-  integrity sha512-pKeZFRn4vQyd8Px9FK6ww3frKiAYPgpKzBayWHd9SOzGjty6aXPsuFvxgRr866KLP1h7Cnd1z3XrhGX17WqO2g==
+"@types/jasminewd2@~2.0.8":
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@types/jasminewd2/-/jasminewd2-2.0.8.tgz#67afe5098d5ef2386073a7b7384b69a840dfe93b"
+  integrity sha512-d9p31r7Nxk0ZH0U39PTH0hiDlJ+qNVGjlt1ucOoTUptxb2v+Y5VMnsxfwN+i3hK4yQnqBi3FMmoMFcd1JHDxdg==
+  dependencies:
+    "@types/jasmine" "*"
 
 "@types/node@*", "@types/node@~12.7.12":
   version "12.7.12"
